@@ -1,7 +1,9 @@
 from flask import Flask, request
+from flask_cors import CORS
 from api.weather import Weather
 
 app = Flask(__name__)
+CORS(app)
 
 api_key = 'f819e16273820cd7df6d1bfee66a7bda'
 weather = Weather(api_key)
