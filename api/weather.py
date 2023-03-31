@@ -1,6 +1,15 @@
 from flask import jsonify
 import requests
 from datetime import datetime, timedelta
+# from dataclass import dataclass
+
+# @dataclass
+# class WeatherData:
+#     datetime: datetime
+#     temperature: float
+#     humidity: float
+#     weather_description: str
+#     icon_code: str
 
 class Weather:
 
@@ -19,6 +28,7 @@ class Weather:
         if data['cod'] != 200:
             return jsonify({'error': data['message']}), data['cod']
 
+        dt = datetime.fromtimestamp(data['dt'])
         current_temp = data['main']['temp']
         humidity = data['main']['humidity']
         weather_description = data['weather'][0]['description']
@@ -27,11 +37,12 @@ class Weather:
         # construct the response object with the weather data and forecast
         response_data = {
             'location': location,
-            'current_weather': {
+            'weather': {
+                'datetime': dt.isoformat(),
                 'temperature': current_temp,
                 'humidity': humidity,
+                'icon_code': icon_code,
                 'weather_description': weather_description,
-                'icon_code': icon_code
             },
         }
 
@@ -50,15 +61,17 @@ class Weather:
             date = dt.date().strftime('%Y-%m-%d')
             if date not in forecasts:
                 forecasts[date] = {
-                    'datetime': dt.isoformat(),
-                    'temp': item['main']['temp'],
-                    'humidity': item['main']['humidity'],
-                    'weather_description': item['weather'][0]['description'],
-                    'icon_code': item['weather'][0]['icon']
+                    'location': location,
+                    'weather': {
+                        'datetime': dt.isoformat(),
+                        'temperature': item['main']['temp'],
+                        'humidity': item['main']['humidity'],
+                        'icon_code': item['weather'][0]['icon'],
+                        'weather_description': item['weather'][0]['description'],
+                    }
                 }
 
         response_data = {
-            'location': location,
             'forecast': forecasts
         }
         return jsonify(response_data)
