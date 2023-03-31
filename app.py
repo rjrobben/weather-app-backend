@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "dffdc06b68ba4bd57c55650929fbe3510ebc5a54d1ec9cebeb5bd91bfb72541c"
 CORS(app)
 
-api_key = 'dd32cd76830f2f6c410e45ac4570f532'
+api_key = 'f819e16273820cd7df6d1bfee66a7bda'
 weather = Weather(api_key)
 
 @app.route("/")
