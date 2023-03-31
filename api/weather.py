@@ -22,6 +22,7 @@ class Weather:
         current_temp = data['main']['temp']
         humidity = data['main']['humidity']
         weather_description = data['weather'][0]['description']
+        icon_code = data['weather'][0]['icon']
 
         # construct the response object with the weather data and forecast
         response_data = {
@@ -29,7 +30,8 @@ class Weather:
             'current_weather': {
                 'temperature': current_temp,
                 'humidity': humidity,
-                'weather_description': weather_description
+                'weather_description': weather_description,
+                'icon_code': icon_code
             },
         }
 
@@ -41,7 +43,7 @@ class Weather:
         response = requests.get(url)
         data = response.json()
 
-        # parse the response and extract the forecast information
+        # parse the response and extract the forecast information per day
         forecasts = {} 
         for item in data['list']:
             dt = datetime.fromisoformat(item['dt_txt'])
@@ -51,7 +53,8 @@ class Weather:
                     'datetime': dt.isoformat(),
                     'temp': item['main']['temp'],
                     'humidity': item['main']['humidity'],
-                    'weather_description': item['weather'][0]['description']
+                    'weather_description': item['weather'][0]['description'],
+                    'icon_code': item['weather'][0]['icon']
                 }
 
         response_data = {
